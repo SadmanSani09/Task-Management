@@ -9,15 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('task_user', function (Blueprint $table) {
-          
-            $table->fore  $table->id();ignId('task_id')->constrained()->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('task_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }
 
-    public function down(): void 
+    public function down(): void
     {
         Schema::dropIfExists('task_user');
     }
