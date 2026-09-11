@@ -9,13 +9,9 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $fillable = [
-        'name', 'email', 'password', 'role',
-    ];
+    protected $fillable = ['name', 'email', 'password', 'role'];
 
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
@@ -25,7 +21,6 @@ class User extends Authenticatable
         ];
     }
 
-    // Relationships
     public function tasks()
     {
         return $this->belongsToMany(Task::class)->withPivot('completed_at')->withTimestamps();
@@ -36,14 +31,8 @@ class User extends Authenticatable
         return $this->hasMany(Task::class, 'created_by');
     }
 
-    // Helpers
     public function isAdmin()
     {
         return $this->role === 'admin';
-    }
-
-    public function isWorker()
-    {
-        return $this->role === 'worker';
     }
 }
