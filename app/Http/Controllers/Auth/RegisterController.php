@@ -32,6 +32,7 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Account created successfully!');
-    }
+        return redirect()->route('worker.dashboard')
+            ->with('success', 'Account created successfully!');
+     }
 }

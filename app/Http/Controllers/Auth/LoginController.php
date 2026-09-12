@@ -14,26 +14,28 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+   {
+    $credentials = $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+    if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $request->session()->regenerate();
 
-            // Redirect based on role
-            if (Auth::user()->isAdmin()) {
-                return redirect()->intended(route('dashboard'))->with('success', 'Welcome back, Admin!');
-            }
-
-            return redirect()->intended(route('dashboard'))->with('success', 'Welcome back!');
+        // 🚀 Role-based redirect
+        if (Auth::user()->isAdmin()) {
+            return redirect()->intended(route('admin.dashboard'))
+                ->with('success', 'Welcome back, Admin!');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return redirect()->intended(route('worker.dashboard'))
+            ->with('success', 'Welcome back!');
+    }
+
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ])->onlyInput('email');
     }
 
     public function logout(Request $request)
