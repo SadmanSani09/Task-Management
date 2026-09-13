@@ -16,7 +16,7 @@
                 </p>
             </div>
 
-            <a href="{{ route('dashboard') }}"
+            <a href="{{ route('admin.dashboard') }}"
                class="text-sm text-indigo-600 hover:underline">
                 <i class="fas fa-arrow-left mr-1"></i> Back
             </a>
