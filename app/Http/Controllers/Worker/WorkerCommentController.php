@@ -31,7 +31,10 @@ class WorkerCommentController extends Controller
             'body'             => $validated['body'],
             'is_read_by_admin' => false,
         ]);
+        
+        return redirect()
+            ->route('worker.dashboard')
+            ->with('success', 'Your comment was sent to the admin.');
 
-        return back()->with('success', 'Your comment was sent to the admin.');
     }
 }

@@ -1,112 +1,316 @@
 @extends('layouts.app')
 
-@section('page-title', 'Home')
+@section('title', 'Office Task Manager — Organize Your Team')
+
 @section('content')
-<div class="max-w-7xl mx-auto">
-    <!-- Hero Section -->
-    <div class="bg-white rounded-2xl shadow-sm p-8 md:p-12 mb-8">
-        <div class="flex flex-col md:flex-row items-center justify-between">
-            <div class="md:w-2/3">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
-                    Daily Task Management
+
+{{-- ================= HERO SECTION ================= --}}
+<section class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-500 to-purple-600 text-white">
+    {{-- Decorative background blobs --}}
+    <div class="absolute -top-32 -right-32 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 py-20 md:py-28">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+
+            {{-- Left: Text --}}
+            <div>
+                <span class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide">
+                    <i class="fas fa-bolt text-yellow-300"></i>
+                    Built for modern teams
+                </span>
+
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mt-6">
+                    Manage Tasks.<br>
+                    <span class="text-yellow-300">Ship Faster.</span>
                 </h1>
-                <p class="text-gray-500 mt-3 text-lg max-w-2xl">
-                    Quickly and easily set up new projects, assign and share tasks, add comments and notes,
-                    share file library, send and receive notifications. All data is synchronized across all
-                    your team members and devices.
+
+                <p class="mt-6 text-lg text-indigo-100 max-w-lg leading-relaxed">
+                    Assign tasks, track progress, and keep your entire team in sync — all from one beautiful dashboard.
+                    No spreadsheets. No chaos. Just results.
                 </p>
-                <div class="mt-6 flex flex-wrap gap-4">
-                    <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md">
-                        Get Started <i class="fas fa-arrow-right ml-2"></i>
+
+                <div class="mt-8 flex flex-wrap gap-4">
+                    <a href="{{ route('register') }}"
+                       class="bg-white text-indigo-700 hover:bg-indigo-50 px-7 py-3.5 rounded-xl font-semibold shadow-lg transition flex items-center gap-2">
+                        <i class="fas fa-rocket"></i> Get Started Free
                     </a>
-                    <a href="#" class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition">
-                        Discover Features
+                    <a href="{{ route('login') }}"
+                       class="border-2 border-white/40 hover:bg-white/10 px-7 py-3.5 rounded-xl font-semibold transition flex items-center gap-2">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
                     </a>
                 </div>
-            </div>
-            <div class="md:w-1/3 mt-6 md:mt-0 flex justify-center">
-                <div class="bg-indigo-100 p-6 rounded-full">
-                    <i class="fas fa-tasks text-6xl text-indigo-600"></i>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Stats & Dashboard Preview (Matches your image) -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Left Column: Sidebar preview -->
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="text-gray-400 text-sm font-medium">Dashboard</h3>
-            <p class="text-xl font-bold text-gray-800 mt-1">Monday, 21 September 2020</p>
-            <div class="mt-4 space-y-3">
-                <div class="flex items-center text-gray-600"><i class="fas fa-briefcase w-6 text-indigo-500"></i> Workspace</div>
-                <div class="flex items-center text-gray-600"><i class="fas fa-columns w-6 text-indigo-500"></i> Boards</div>
-                <div class="flex items-center text-gray-600"><i class="fas fa-tasks w-6 text-indigo-500"></i> Tasks</div>
-                <div class="flex items-center text-gray-600"><i class="fas fa-users w-6 text-indigo-500"></i> Meetings</div>
-                <div class="flex items-center text-gray-600"><i class="fas fa-hourglass-half w-6 text-indigo-500"></i> Timesheets</div>
-                <div class="flex items-center text-gray-600"><i class="fas fa-comments w-6 text-indigo-500"></i> Chat</div>
+                <div class="mt-8 flex items-center gap-6 text-sm text-indigo-100">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-300"></i> Free forever
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-green-300"></i> Secure
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Middle Column: Welcome Back / Progress -->
-        <div class="bg-white rounded-2xl shadow-sm p-6 md:col-span-1">
-            <h2 class="text-lg font-bold text-gray-800">Welcome Back, Jacob!</h2>
-            <p class="text-gray-500 text-sm mt-1">You have 6 tasks to finish all tasks today.</p>
-            <div class="mt-3">
-                <div class="flex justify-between text-sm text-gray-600">
-                    <span>Completed 50%</span>
-                    <span>50%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
-                    <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 50%"></div>
-                </div>
-                <p class="text-xs text-green-500 mt-2"><i class="fas fa-arrow-up mr-1"></i> Your progress is very good.</p>
-            </div>
-            
-            <!-- My Profile Stats -->
-            <div class="grid grid-cols-2 gap-4 mt-6">
-                <div class="bg-gray-50 p-3 rounded-lg">
-                    <p class="text-xs text-gray-400">Project Estimate</p>
-                    <p class="text-xl font-bold text-gray-800">10</p>
-                </div>
-                <div class="bg-gray-50 p-3 rounded-lg">
-                    <p class="text-xs text-gray-400">Total tasks</p>
-                    <p class="text-xl font-bold text-gray-800">125</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Column: Team Chat & Marketing -->
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h3 class="font-bold text-gray-800">Email marketing campaign</h3>
-            <div class="flex flex-wrap gap-2 mt-3">
-                <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">Management</span>
-                <span class="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full">Marketing</span>
-                <span class="bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">Human Resources</span>
-            </div>
-            
-            <div class="mt-4 border-t pt-4">
-                <h4 class="font-semibold text-gray-700 text-sm">Team Chat</h4>
-                <div class="grid grid-cols-2 gap-3 mt-3">
-                    <div class="bg-green-50 p-2 rounded-lg text-center">
-                        <p class="text-lg font-bold text-green-600">30%</p>
-                        <p class="text-xs text-gray-500">Progress</p>
+            {{-- Right: Illustration --}}
+            <div class="hidden md:flex justify-center">
+                <div class="relative">
+                    <div class="w-80 h-80 bg-white/10 rounded-3xl backdrop-blur-sm flex items-center justify-center border border-white/20 shadow-2xl">
+                        <i class="fas fa-list-check text-white text-[10rem] opacity-90"></i>
                     </div>
-                    <div class="bg-yellow-50 p-2 rounded-lg text-center">
-                        <p class="text-lg font-bold text-yellow-600">45%</p>
-                        <p class="text-xs text-gray-500">Progress</p>
+                    {{-- Floating badges --}}
+                    <div class="absolute -top-4 -left-4 bg-white text-indigo-700 rounded-xl px-4 py-2 shadow-lg font-semibold text-sm flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500"></i> {{ $completedTasks }} Done
                     </div>
-                    <div class="bg-red-50 p-2 rounded-lg text-center">
-                        <p class="text-lg font-bold text-red-600">10+</p>
-                        <p class="text-xs text-gray-500">Tasks</p>
-                    </div>
-                    <div class="bg-blue-50 p-2 rounded-lg text-center">
-                        <p class="text-lg font-bold text-blue-600">15+</p>
-                        <p class="text-xs text-gray-500">Meetings</p>
+                    <div class="absolute -bottom-4 -right-4 bg-white text-indigo-700 rounded-xl px-4 py-2 shadow-lg font-semibold text-sm flex items-center gap-2">
+                        <i class="fas fa-spinner text-blue-500"></i> {{ $inProgress }} In Progress
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+{{-- ================= LIVE STATS ================= --}}
+<section class="max-w-7xl mx-auto px-6 -mt-12 relative z-10">
+    <div class="bg-white rounded-3xl shadow-xl border border-gray-100 grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100 overflow-hidden">
+
+        {{-- Total Tasks --}}
+        <div class="p-6 text-center">
+            <div class="w-12 h-12 mx-auto bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-list-check text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalTasks }}</p>
+            <p class="text-xs text-gray-500 uppercase font-semibold mt-1">Total Tasks</p>
+        </div>
+
+        {{-- Completed --}}
+        <div class="p-6 text-center">
+            <div class="w-12 h-12 mx-auto bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-check-circle text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-gray-800">{{ $completedTasks }}</p>
+            <p class="text-xs text-gray-500 uppercase font-semibold mt-1">Completed</p>
+        </div>
+
+        {{-- In Progress --}}
+        <div class="p-6 text-center">
+            <div class="w-12 h-12 mx-auto bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-spinner text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-gray-800">{{ $inProgress }}</p>
+            <p class="text-xs text-gray-500 uppercase font-semibold mt-1">In Progress</p>
+        </div>
+
+        {{-- Workers --}}
+        <div class="p-6 text-center">
+            <div class="w-12 h-12 mx-auto bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-3">
+                <i class="fas fa-users text-xl"></i>
+            </div>
+            <p class="text-3xl font-bold text-gray-800">{{ $totalWorkers }}</p>
+            <p class="text-xs text-gray-500 uppercase font-semibold mt-1">Active Workers</p>
+        </div>
+    </div>
+</section>
+
+{{-- ================= PROGRESS + OVERVIEW ================= --}}
+<section class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid md:grid-cols-3 gap-6">
+
+        {{-- Progress Card --}}
+        <div class="md:col-span-2 bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">Team Progress</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        @if($totalTasks > 0)
+                            {{ $completedTasks }} of {{ $totalTasks }} tasks completed across the team.
+                        @else
+                            No tasks yet — new tasks will show up here in real time.
+                        @endif
+                    </p>
+                </div>
+                <div class="text-right">
+                    <p class="text-4xl font-extrabold text-indigo-600">{{ $completionRate }}%</p>
+                    <p class="text-xs text-gray-400 uppercase font-semibold">Complete</p>
+                </div>
+            </div>
+
+            {{-- Big progress bar --}}
+            <div class="w-full bg-gray-100 rounded-full h-4 mt-6 overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 h-4 rounded-full transition-all duration-700"
+                     style="width: {{ $completionRate }}%"></div>
+            </div>
+
+            {{-- Breakdown row --}}
+            <div class="grid grid-cols-3 gap-4 mt-8">
+                <div class="bg-yellow-50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 text-yellow-700 text-xs font-semibold uppercase">
+                        <i class="fas fa-clock"></i> Pending
+                    </div>
+                    <p class="text-2xl font-bold text-yellow-800 mt-1">{{ $pendingTasks }}</p>
+                </div>
+                <div class="bg-blue-50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 text-blue-700 text-xs font-semibold uppercase">
+                        <i class="fas fa-spinner"></i> In Progress
+                    </div>
+                    <p class="text-2xl font-bold text-blue-800 mt-1">{{ $inProgress }}</p>
+                </div>
+                <div class="bg-red-50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 text-red-700 text-xs font-semibold uppercase">
+                        <i class="fas fa-exclamation-triangle"></i> Overdue
+                    </div>
+                    <p class="text-2xl font-bold text-red-800 mt-1">{{ $overdueTasks }}</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Quick info card --}}
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-3xl shadow-lg p-8 flex flex-col justify-between">
+            <div>
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-tags text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold">Categories</h3>
+                <p class="text-3xl font-extrabold mt-2">{{ $totalCategories }}</p>
+                <p class="text-indigo-100 text-sm mt-2">
+                    Organize tasks by team, project, or priority.
+                </p>
+            </div>
+            <a href="{{ route('register') }}"
+               class="mt-6 inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm px-4 py-2.5 rounded-xl text-sm font-semibold transition">
+                Get Started <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+{{-- ================= FEATURES ================= --}}
+<section class="bg-white border-y border-gray-100">
+    <div class="max-w-7xl mx-auto px-6 py-20">
+
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
+                Everything your team needs
+            </h2>
+            <p class="text-gray-500 mt-3 text-lg">
+                Simple enough for small teams. Powerful enough for growing ones.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+            <div class="text-center p-6">
+                <div class="w-16 h-16 mx-auto bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-user-shield text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-gray-800 mb-2">Role-Based Access</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">
+                    Admins manage everything. Workers focus on their tasks. Guests browse safely.
+                </p>
+            </div>
+
+            <div class="text-center p-6">
+                <div class="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-tasks text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-gray-800 mb-2">Task Assignment</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">
+                    Create tasks, set priorities and deadlines, then assign them to specific workers.
+                </p>
+            </div>
+
+            <div class="text-center p-6">
+                <div class="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-comments text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-lg text-gray-800 mb-2">Live Comments</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">
+                    Workers report progress inside each task. Admins see every update instantly.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{{-- ================= HOW IT WORKS ================= --}}
+<section class="max-w-7xl mx-auto px-6 py-20">
+
+    <div class="text-center max-w-2xl mx-auto mb-14">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-800">How it works</h2>
+        <p class="text-gray-500 mt-3 text-lg">Three simple steps to get your team running.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 relative">
+
+        {{-- Step 1 --}}
+        <div class="relative bg-gray-50 rounded-2xl p-6">
+            <div class="absolute -top-4 left-6 w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg">
+                1
+            </div>
+            <div class="mt-4">
+                <i class="fas fa-user-plus text-indigo-600 text-2xl"></i>
+                <h3 class="font-bold text-lg text-gray-800 mt-3">Register</h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    Sign up as a worker and get instant access to your personal dashboard.
+                </p>
+            </div>
+        </div>
+
+        {{-- Step 2 --}}
+        <div class="relative bg-gray-50 rounded-2xl p-6">
+            <div class="absolute -top-4 left-6 w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg">
+                2
+            </div>
+            <div class="mt-4">
+                <i class="fas fa-clipboard-check text-indigo-600 text-2xl"></i>
+                <h3 class="font-bold text-lg text-gray-800 mt-3">Receive Tasks</h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    Admin assigns tasks with priority, deadline, and category to you.
+                </p>
+            </div>
+        </div>
+
+        {{-- Step 3 --}}
+        <div class="relative bg-gray-50 rounded-2xl p-6">
+            <div class="absolute -top-4 left-6 w-10 h-10 bg-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg">
+                3
+            </div>
+            <div class="mt-4">
+                <i class="fas fa-flag-checkered text-indigo-600 text-2xl"></i>
+                <h3 class="font-bold text-lg text-gray-800 mt-3">Get It Done</h3>
+                <p class="text-sm text-gray-500 mt-2">
+                    Start the task, update status, add comments, and mark it complete.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{{-- ================= FINAL CTA ================= --}}
+<section class="max-w-7xl mx-auto px-6 pb-20">
+    <div class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 rounded-3xl p-10 md:p-16 text-center text-white">
+        <div class="absolute -top-24 -right-24 w-72 h-72 bg-indigo-500/30 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl"></div>
+
+        <div class="relative">
+            <h2 class="text-3xl md:text-4xl font-bold">Ready to get your team organized?</h2>
+            <p class="text-indigo-200 mt-4 max-w-xl mx-auto">
+                Join now and start managing tasks the modern way. Free forever for small teams.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <a href="{{ route('register') }}"
+                   class="bg-white text-indigo-700 hover:bg-indigo-50 px-7 py-3.5 rounded-xl font-semibold shadow-lg transition flex items-center gap-2">
+                    <i class="fas fa-rocket"></i> Create Free Account
+                </a>
+                <a href="{{ route('login') }}"
+                   class="border-2 border-white/40 hover:bg-white/10 px-7 py-3.5 rounded-xl font-semibold transition flex items-center gap-2">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
 @endsection
