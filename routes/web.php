@@ -17,13 +17,13 @@ use App\Http\Controllers\Admin\AdminCommentController;
 use App\Http\Controllers\Worker\WorkerDashboardController;
 use App\Http\Controllers\Worker\WorkerTaskController;
 use App\Http\Controllers\Worker\WorkerCommentController;
-
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | 🌐 Public Routes
 |--------------------------------------------------------------------------
 */
-Route::get('/', fn() => view('welcome'))->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 /*
 |--------------------------------------------------------------------------

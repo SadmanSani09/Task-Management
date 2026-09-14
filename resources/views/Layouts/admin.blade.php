@@ -12,19 +12,28 @@
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    {{-- Alpine.js for dropdown toggle --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
     <style>
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #1e293b; }
         ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+
+        /* Hide Alpine elements before Alpine loads (prevents flash) */
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="bg-slate-100 font-sans antialiased">
 
 <div class="flex h-screen overflow-hidden">
 
-    {{-- ================= SIDEBAR ================= --}}
+    {{-- ==================== SIDEBAR ==================== --}}
     <aside class="w-64 bg-slate-900 text-slate-200 flex-shrink-0 hidden md:flex flex-col">
-        <div class="p-5 border-b border-slate-700 flex items-center gap-3">
+
+        {{-- Logo (clickable → admin dashboard) --}}
+        <a href="{{ route('admin.dashboard') }}"
+        class="p-5 border-b border-slate-700 flex items-center gap-3 hover:bg-slate-800 transition">
             <div class="bg-indigo-600 text-white w-10 h-10 rounded-lg flex items-center justify-center">
                 <i class="fas fa-shield-alt"></i>
             </div>
@@ -32,8 +41,9 @@
                 <p class="font-bold text-white leading-tight">Admin Panel</p>
                 <p class="text-xs text-slate-400">Office Task Manager</p>
             </div>
-        </div>
+        </a>
 
+        {{-- Nav (Logout button removed) --}}
         <nav class="flex-1 p-3 space-y-1 overflow-y-auto text-sm">
 
             <p class="px-3 pt-3 pb-1 text-xs uppercase text-slate-500 font-semibold">Main</p>
@@ -64,32 +74,53 @@
                 <i class="fas fa-tags w-5"></i> Categories
             </a>
 
-            <p class="px-3 pt-4 pb-1 text-xs uppercase text-slate-500 font-semibold">System</p>
-            <a href="{{ route('home') }}" target="_blank"
-               class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 transition">
-                <i class="fas fa-globe w-5"></i> View Public Site
-            </a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit"
-                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-600 transition text-left">
-                    <i class="fas fa-sign-out-alt w-5"></i> Logout
-                </button>
-            </form>
         </nav>
 
-        <div class="p-4 border-t border-slate-700 flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
-                {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+        {{-- ==================== USER DROPDOWN (bottom) ==================== --}}
+        <div class="border-t border-slate-700 relative" x-data="{ open: false }" @click.outside="open = false">
+
+            {{-- Dropdown menu (opens upward) --}}
+            <div x-show="open"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-2"
+                 x-cloak
+                 class="absolute bottom-full left-3 right-3 mb-2 bg-slate-800 rounded-xl shadow-lg border border-slate-700 overflow-hidden z-30">
+
+                {{-- Logout option --}}
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                            class="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-red-400 hover:bg-red-900/30 transition">
+                        <i class="fas fa-sign-out-alt w-5"></i> Logout
+                    </button>
+                </form>
             </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm text-white truncate">{{ auth()->user()->name }}</p>
-                <p class="text-xs text-slate-400 truncate">{{ auth()->user()->email }}</p>
-            </div>
+
+            {{-- Clickable user block --}}
+            <button type="button"
+                    @click="open = !open"
+                    class="w-full p-4 flex items-center gap-3 hover:bg-slate-800 transition text-left">
+
+                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold flex-shrink-0">
+                    {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm text-white truncate font-medium">{{ auth()->user()->name }}</p>
+                    <p class="text-xs text-slate-400 truncate">{{ auth()->user()->email }}</p>
+                </div>
+
+                <i class="fas fa-chevron-up text-xs text-slate-400 transition-transform duration-200"
+                   :class="open ? 'rotate-180' : ''"></i>
+            </button>
         </div>
     </aside>
 
-    {{-- ================= MAIN ================= --}}
+    {{-- ==================== MAIN ==================== --}}
     <div class="flex-1 flex flex-col overflow-y-auto">
 
         {{-- Top bar --}}

@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.worker')
 
 @section('page-title', 'Task Details')
 
 @section('content')
 <div class="max-w-4xl mx-auto">
 
-    {{-- Task Header --}}
+    {{-- ================= TASK HEADER ================= --}}
     <div class="bg-white rounded-2xl shadow-sm p-6 mb-5">
         <div class="flex justify-between items-start mb-4">
             <div>
@@ -16,9 +16,9 @@
                 </p>
             </div>
 
-            <a href="{{ route('admin.dashboard') }}"
-               class="text-sm text-indigo-600 hover:underline">
-                <i class="fas fa-arrow-left mr-1"></i> Back
+            <a href="{{ route('worker.dashboard') }}"
+               class="text-sm text-indigo-600 hover:underline whitespace-nowrap">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
             </a>
         </div>
 
@@ -26,36 +26,60 @@
             {{ $task->description ?: 'No description provided.' }}
         </p>
 
+        {{-- Meta grid --}}
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 text-sm">
             <div>
-                <p class="text-xs text-gray-400 uppercase">Category</p>
-                <p class="font-medium text-gray-800">{{ $task->category->name ?? '—' }}</p>
+                <p class="text-xs text-gray-400 uppercase font-semibold">Category</p>
+                <p class="font-medium text-gray-800 mt-1">{{ $task->category->name ?? '—' }}</p>
             </div>
             <div>
-                <p class="text-xs text-gray-400 uppercase">Priority</p>
-                <p class="font-medium text-gray-800">{{ ucfirst($task->priority) }}</p>
+                <p class="text-xs text-gray-400 uppercase font-semibold">Priority</p>
+                <p class="mt-1">
+                    <span class="px-2 py-1 text-xs rounded-full font-medium
+                        @if($task->priority == 'urgent') bg-red-100 text-red-700
+                        @elseif($task->priority == 'high') bg-orange-100 text-orange-700
+                        @elseif($task->priority == 'medium') bg-yellow-100 text-yellow-700
+                        @else bg-blue-100 text-blue-700 @endif">
+                        {{ ucfirst($task->priority) }}
+                    </span>
+                </p>
             </div>
             <div>
-                <p class="text-xs text-gray-400 uppercase">Deadline</p>
-                <p class="font-medium text-gray-800">{{ $task->deadline->format('d M Y') }}</p>
+                <p class="text-xs text-gray-400 uppercase font-semibold">Deadline</p>
+                <p class="font-medium text-gray-800 mt-1">
+                    {{ $task->deadline->format('d M Y') }}
+                    @if($task->deadline->isPast() && $task->status !== 'completed')
+                        <span class="text-xs text-red-500 block">
+                            <i class="fas fa-exclamation-circle"></i> Overdue
+                        </span>
+                    @endif
+                </p>
             </div>
             <div>
-                <p class="text-xs text-gray-400 uppercase">Status</p>
-                <p class="font-medium text-gray-800">{{ str_replace('_',' ',ucfirst($task->status)) }}</p>
+                <p class="text-xs text-gray-400 uppercase font-semibold">Status</p>
+                <p class="mt-1">
+                    <span class="px-2 py-1 text-xs rounded-full font-medium
+                        @if($task->status == 'completed') bg-green-100 text-green-700
+                        @elseif($task->status == 'in_progress') bg-blue-100 text-blue-700
+                        @elseif($task->status == 'overdue') bg-red-100 text-red-700
+                        @else bg-gray-100 text-gray-700 @endif">
+                        {{ str_replace('_', ' ', ucfirst($task->status)) }}
+                    </span>
+                </p>
             </div>
         </div>
 
-        {{-- Quick status buttons --}}
+        {{-- ================= QUICK STATUS BUTTONS ================= --}}
         <div class="mt-6 pt-4 border-t flex gap-3">
             @if($task->status === 'pending')
-                <form action="{{ route('tasks.progress', $task) }}" method="POST">
+                <form action="{{ route('worker.tasks.progress', $task) }}" method="POST">
                     @csrf @method('PATCH')
                     <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
                         <i class="fas fa-play mr-1"></i> Start Task
                     </button>
                 </form>
             @elseif($task->status === 'in_progress')
-                <form action="{{ route('tasks.complete', $task) }}" method="POST">
+                <form action="{{ route('worker.tasks.complete', $task) }}" method="POST">
                     @csrf @method('PATCH')
                     <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
                         <i class="fas fa-check mr-1"></i> Mark as Completed
@@ -65,11 +89,15 @@
                 <span class="bg-green-100 text-green-700 px-4 py-2 rounded-lg text-sm font-medium">
                     <i class="fas fa-check-circle mr-1"></i> Completed
                 </span>
+            @else
+                <span class="bg-red-100 text-red-700 px-4 py-2 rounded-lg text-sm font-medium">
+                    <i class="fas fa-exclamation-triangle mr-1"></i> Overdue
+                </span>
             @endif
         </div>
     </div>
 
-    {{-- 💬 Comments Section --}}
+    {{-- ================= 💬 COMMENTS SECTION ================= --}}
     <div class="bg-white rounded-2xl shadow-sm p-6">
         <h3 class="font-semibold text-gray-800 mb-4">
             <i class="fas fa-comments mr-2 text-indigo-500"></i>
@@ -97,29 +125,32 @@
             </div>
         </form>
 
-        {{-- Comments list (worker sees own + admin replies) --}}
+        {{-- Comments list --}}
         <div class="space-y-3">
             @forelse($task->comments as $comment)
-            <div class="p-4 rounded-lg border
-                {{ $comment->user_id === auth()->id() ? 'bg-indigo-50 border-indigo-200' : 'bg-yellow-50 border-yellow-200' }}">
-                <div class="flex items-center justify-between mb-1">
-                    <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
-                            {{ $comment->user_id === auth()->id() ? 'bg-indigo-600 text-white' : 'bg-yellow-500 text-white' }}">
-                            {{ strtoupper(substr($comment->user->name,0,1)) }}
+                @php $isMine = $comment->user_id === auth()->id(); @endphp
+                <div class="p-4 rounded-lg border
+                    {{ $isMine ? 'bg-indigo-50 border-indigo-200' : 'bg-yellow-50 border-yellow-200' }}">
+
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
+                                {{ $isMine ? 'bg-indigo-600 text-white' : 'bg-yellow-500 text-white' }}">
+                                {{ strtoupper(substr($comment->user->name, 0, 1)) }}
+                            </div>
+                            <span class="text-sm font-semibold text-gray-800">
+                                {{ $isMine ? 'You' : 'Admin' }}
+                            </span>
                         </div>
-                        <span class="text-sm font-semibold text-gray-800">
-                            {{ $comment->user_id === auth()->id() ? 'You' : 'Admin' }}
-                        </span>
+                        <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
                     </div>
-                    <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
+
+                    <p class="text-sm text-gray-700 whitespace-pre-line ml-9">{{ $comment->body }}</p>
                 </div>
-                <p class="text-sm text-gray-700 whitespace-pre-line">{{ $comment->body }}</p>
-            </div>
             @empty
-            <p class="text-center text-gray-400 text-sm py-6">
-                No comments yet. Submit your first update above.
-            </p>
+                <p class="text-center text-gray-400 text-sm py-6">
+                    No comments yet. Submit your first update above.
+                </p>
             @endforelse
         </div>
     </div>

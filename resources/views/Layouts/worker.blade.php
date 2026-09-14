@@ -8,14 +8,20 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    {{-- Alpine.js for dropdown toggle --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 </head>
 <body class="bg-slate-50 font-sans antialiased">
 
 <div class="flex h-screen overflow-hidden">
 
-    {{-- Sidebar --}}
+    {{-- ==================== SIDEBAR ==================== --}}
     <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0 hidden md:flex flex-col">
-        <div class="p-5 border-b flex items-center gap-3">
+
+        {{-- Logo (clickable → worker dashboard) --}}
+        <a href="{{ route('worker.dashboard') }}"
+        class="p-5 border-b flex items-center gap-3 hover:bg-gray-50 transition">
             <div class="bg-indigo-600 text-white w-10 h-10 rounded-lg flex items-center justify-center">
                 <i class="fas fa-user-tie"></i>
             </div>
@@ -23,9 +29,10 @@
                 <p class="font-bold text-gray-800 leading-tight">Worker Panel</p>
                 <p class="text-xs text-gray-400">Office Task Manager</p>
             </div>
-        </div>
+        </a>
 
-        <nav class="flex-1 p-3 space-y-1 text-sm">
+        {{-- Nav (Logout button removed) --}}
+        <nav class="flex-1 p-3 space-y-1 text-sm overflow-y-auto">
             <p class="px-3 pt-3 pb-1 text-xs uppercase text-gray-400 font-semibold">My Work</p>
 
             <a href="{{ route('worker.dashboard') }}"
@@ -33,34 +40,53 @@
                {{ request()->routeIs('worker.dashboard') ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
                 <i class="fas fa-th-large w-5"></i> Dashboard
             </a>
-
-            <p class="px-3 pt-4 pb-1 text-xs uppercase text-gray-400 font-semibold">Account</p>
-            <a href="{{ route('home') }}" target="_blank"
-               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition">
-                <i class="fas fa-globe w-5"></i> View Public Site
-            </a>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit"
-                        class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-gray-600 hover:bg-red-50 hover:text-red-600 transition">
-                    <i class="fas fa-sign-out-alt w-5"></i> Logout
-                </button>
-            </form>
         </nav>
 
-        <div class="p-4 border-t flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
-                {{ strtoupper(substr(auth()->user()->name ?? 'W', 0, 1)) }}
+        {{-- ==================== USER DROPDOWN (bottom) ==================== --}}
+        <div class="border-t relative" x-data="{ open: false }" @click.outside="open = false">
+
+            {{-- Dropdown menu (opens upward) --}}
+            <div x-show="open"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-2"
+                 x-cloak
+                 class="absolute bottom-full left-3 right-3 mb-2 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-30">
+
+                {{-- Logout option --}}
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                            class="w-full flex items-center gap-3 px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 transition">
+                        <i class="fas fa-sign-out-alt w-5"></i> Logout
+                    </button>
+                </form>
             </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-sm text-gray-800 truncate font-medium">{{ auth()->user()->name }}</p>
-                <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
-            </div>
+
+            {{-- Clickable user block --}}
+            <button type="button"
+                    @click="open = !open"
+                    class="w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition text-left">
+
+                <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold flex-shrink-0">
+                    {{ strtoupper(substr(auth()->user()->name ?? 'W', 0, 1)) }}
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm text-gray-800 truncate font-medium">{{ auth()->user()->name }}</p>
+                    <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email }}</p>
+                </div>
+
+                <i class="fas fa-chevron-up text-xs text-gray-400 transition-transform duration-200"
+                   :class="open ? 'rotate-180' : ''"></i>
+            </button>
         </div>
     </aside>
 
-    {{-- Main --}}
+    {{-- ==================== MAIN CONTENT ==================== --}}
     <div class="flex-1 flex flex-col overflow-y-auto">
 
         <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
@@ -94,6 +120,11 @@
         </main>
     </div>
 </div>
+
+{{-- Hide x-cloak elements before Alpine loads (prevents flash) --}}
+<style>
+    [x-cloak] { display: none !important; }
+</style>
 
 </body>
 </html>
